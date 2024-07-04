@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>NOVA ERA</title>
+  <script>
+    let validadeHorario = null;
+    let ativoSelecionado = null;
+    let isLoggedIn = false;
+
+    function gerarNumeroAleatorio() {
+      return Math.floor(Math.random() * 3) + 1;
+    }
+
+    function gerarAcaoAleatoria() {
+      const acoes = ['⬆M1/CALL', '⬇M1/PUT'];
+      const indice = Math.floor(Math.random() * acoes.length);
+      return acoes[indice];
+    }
+
+    function gerarHorarioValidade() {
+      const agora = new Date();
+      const minutosAdicionais = Math.floor(Math.random() * 3) + 3; // Adiciona entre 3 e 5 minutos
+      agora.setMinutes(agora.getMinutes() + minutosAdicionais);
+      validadeHorario = agora;
+      return agora.toTimeString().slice(0, 5);
+    }
+
+    function atualizarResultados() {
+      const agora = new Date();
+      if (validadeHorario && agora > validadeHorario) {
+        document.getElementById('numeroAleatorio').innerText = '--';
+        document.getElementById('acaoSelecionada').innerText = '--';
+        document.getElementById('horario').innerText = '--';
+        validadeHorario = null; // Resetar validade
+      }
+    }
+
+    function toggleAtivos() {
+      const ativos = document.getElementById('ativos');
+      if (ativos.style.display === 'none') {
+        ativos.style.display = 'block';
+      } else {
+        ativos.style.display = 'none';
+      }
+    }
+
+    function selecionarAtivo(element) {
+      ativoSelecionado = element.innerText;
+      document.querySelector('.ativo-selecionado').innerText = 'Ativo selecionado: ' + ativoSelecionado;
+      document.querySelector('.ativo-selecionado').style.display = 'block';
+      fecharMenuAtivos(); // Chamada para fechar o menu de ativos
+    }
+
+    function fecharMenuAtivos() {
+      document.getElementById('ativos').style.display = 'none';
+    }
+
+    function gerarResultado() {
+      const tituloInteligencia = document.querySelector('.titulo_inteligencia');
+      const mensagens = [
+        "Executando IA...",
+        "Calculando...",
+        "Não atualize a página...",
+        "RESULTADO ENCONTRADO!"
+      ];
+
+      const agora = new Date();
+      if (validadeHorario && agora <= validadeHorario) {
+        alert('Por favor, espere até que o horário de validade atual expire.');
+        return;
+      }
+
+      // Verifica se o usuário está logado
+      if (!isLoggedIn) {
+        alert('Por favor, faça login para gerar o resultado.');
+        document.getElementById('loginModal').style.display = 'block';
+        return;
+      }
+
+      // Exibir as mensagens sequencialmente
+      exibirMensagens(mensagens, 0);
+
+      function exibirMensagens(mensagens, index) {
+        if (index < mensagens.length) {
+          setTimeout(function () {
+            tituloInteligencia.style.display = 'block'; // Mostra o bloco de inteligência
+            tituloInteligencia.innerHTML = `<p>${mensagens[index]}</p>`;
+            exibirMensagens(mensagens, index + 1);
+          }, 1500); // Tempo de espera entre cada mensagem (1.5 segundos)
+        } else {
+          // Após exibir todas as mensagens, gerar o resultado final
+          setTimeout(function () {
+            document.getElementById('numeroAleatorio').innerText = gerarNumeroAleatorio();
+            document.getElementById('acaoSelecionada').innerText = gerarAcaoAleatoria();
+            document.getElementById('horario').innerText = gerarHorarioValidade();
+          }, 1500); // Tempo adicional antes de gerar o resultado final
+        }
+      }
+    }
+
+    function fazerLogin() {
+      const login = document.getElementById('login').value;
+      const senha = document.getElementById('senha').value;
+
+      if (login === 'Admin' && senha === 'AdminNovaera') {
+        isLoggedIn = true;
+        document.getElementById('loginModal').style.display = 'none';
+        alert('Login realizado com sucesso!');
+      } else {
+        document.getElementById('erroLogin').style.display = 'block';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      setInterval(atualizarResultados, 1000);
+    });
+    function fecharLoginModal() {
+      document.getElementById('loginModal').style.display = 'none';
+    }
+    
+  </script>
+  
+</head>
+
+<body>
+  <section class="topo">
+    <h1><strong>ATENÇÃO</strong></h1>
+    <div class="topo-frase">
+      <p>O APP atualizou! Ele só esta funcionando na EXNOVA
+      </p>
+    </div>
+  </section>
+  <nav><img class="imagem-logo" style="width: 40%;" src="imagens/HACKER-BINARIAS-150x150.png" alt="logo_nova_era"></nav>
+<main id="tamanho-app">
+  <p id="btnMostrarAtivos" style="font-size: 0.8em;" onclick="toggleAtivos()"><strong>Selecionar o ativo</strong> ▶</p>
+
+  <div id="ativos" style="display: none; font-size: 0.8em;">
+    <nav>
+      <ul id="listaAtivos" style="background-color: #252525; border-radius: 5px;" >
+        <li onclick="selecionarAtivo(this)">AUD/CAD</li>
+  <li onclick="selecionarAtivo(this)">AUD/CAD<span class="otc" >OTC</span></li>
+  <li onclick="selecionarAtivo(this)">AUD/CHF</li>
+  <li onclick="selecionarAtivo(this)">AUD/JPY</li>
+  <li onclick="selecionarAtivo(this)">AUD/NZD</li>
+  <li onclick="selecionarAtivo(this)">AUD/USD</li>
+  <li onclick="selecionarAtivo(this)">CAD/CHF</li>
+  <li onclick="selecionarAtivo(this)">EUR/NZD</li>
+  <li onclick="selecionarAtivo(this)">CAD/JPY</li>
+  <li onclick="selecionarAtivo(this)">EUR/CHF</li>
+  <li onclick="selecionarAtivo(this)">EUR/GBP</li>
+  <li onclick="selecionarAtivo(this)">EUR/GBP<span class="otc">OTC</span></li>
+  <li onclick="selecionarAtivo(this)">EUR/JPY</li>
+  <li onclick="selecionarAtivo(this)">EUR/JPY<span class="otc">OTC</span></li>
+  <li onclick="selecionarAtivo(this)">EUR/USD</li>
+  <li onclick="selecionarAtivo(this)">EUR/USD<span class="otc">OTC</span></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="area_de_sinais">
+    <p style="font-family:Arial, Helvetica, sans-serif; background: rgb(58, 58, 58);padding-top: 5px; padding-bottom: 5px">Inteligência Artificial</p>
+    <div class="titulo_inteligencia" >
+      <p >Inteligência Artificial</p>
+    </div>
+
+    <div class="box-container">
+      <div class="MuiBox-root-css-1xp53wj">
+        <p class="MuiBox-root"><strong>Proteções</strong></p>
+        <p class="css-rjf9zc2" id="numeroAleatorio">--</p>
+      </div>
+      <div class="MuiBox-root-css-1xp53wj">
+        <p class="MuiBox-root">Ação</p>
+        <p class="css-rjf9zc2" id="acaoSelecionada">--</p>
+      </div>
+      <div class="MuiBox-root-css-1xp53wj-validade" id="horarioContainer">
+        <p class="MuiBox-root-validade">Válido até</p>
+        <p class="css-rjf9zc2" id="horario">--</p>
+      </div>
+    </div>
+    <p class="ativo-selecionado" style="display: none;">Ativo selecionado</p>
+    <button class="botao-resultado" onclick="gerarResultado()" ><strong>Identificar Resultado</strong></button>
+  </div>
+
+  <!-- Mostra o ativo selecionado -->
+
+  <!-- Página de login flutuante -->
+  <div id="loginModal">
+   
+    <div id="loginContent"> <img src="imagens/HACKER-BINARIAS-100x100.png" alt="" style="border-radius: 10px; width: 60px;">
+      <span class="close" onclick="fecharLoginModal()">&times;</span>
+      <h2>Login</h2>
+      <p>Faça o login e identifique os sinais!</p>
+      <input type="text" id="login" placeholder="Login">
+      <input type="password" id="senha" placeholder="Senha">
+      <p><a href="https://t.me/Suporte_44" style="text-decoration: none;
+        list-style: none; color: #ffffff;
+        cursor: pointer;
+        text-decoration: un;
+        font-weight: 700;">Esqueceu a senha?</a></p>
+      <button onclick="fazerLogin()">Entrar</button>
+      <p id="erroLogin" >Envie comprovante de depósito na Corretora para o suporte e obtenha seu login.</p>
+    </div>
+  </div>
+  <div class="criar-exp">
+    <p class="direcao">
+      &#8856; Criar Conta na EXNOVA <span><a href="https://abrir.link/LqVGT" style="text-decoration: none;
+      list-style: none; color: #4cbfeb;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 700;" target="_blank">Clique aqui!</a></span>
+    </p>
+  </div>
+    <div class="app-sem">
+      <h3><strong>Não utilize o APP sem antes assistir o
+          PASSO A PASSO!</strong>
+      </h3>
+
+</div>
+<div class="titulo-aula">
+  <p>Aula 1 – Como o App E-Reader funciona e Como usa-lo:</p>
+</div>
+<div class="video-aula">
+  <img src="imagens/teste.png" alt="" width="100%"></div>
+  <div class="app-sem"><h3>
+    <strong>
+      Crie sua conta na API oficial do App E-Reader
+        conectado a corretora EXNOVA:
+    </strong>
+  </h3>
+</div>
+
+<button class="conta-indicacao">
+  <img src="imagens/lucro.png" alt="" class="conta-indicacao-img">
+  <strong>
+      <h3>
+          <a href="https://abrir.link/LqVGT" style="text-decoration: none; color: rgb(255, 255, 255); padding-bottom: 2px;" target="_blank">
+              Criar Conta
+          </a>
+      </h3>
+  </strong>
+</button>
+<br>
+
+<button class="conta-indicaçao2">
+  <img src="imagens/whatsapp.png" alt="" class="conta-indicacao-img">
+  <strong><h3><a href="https://chat.whatsapp.com/Bm5kQJvYRmZE9Uu7sx2fC9"target="_blank" style="text-decoration: none;
+    list-style: none; color: white;"> Acesse o grupo de alunos:</a></h3></strong></button>
+ 
+  </button>
+  <p class="suorte-telegram"  ><a href="https://t.me/Suporte_44" style="text-decoration: none;
+    list-style: none; color: white; "target="_blank">Suporte telegram</a></p>
+  </main>
+    
+  </body>
+</html>
